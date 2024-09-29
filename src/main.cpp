@@ -1,18 +1,33 @@
 #include <Arduino.h>
+/*
+  Simple example for receiving
 
-// put function declarations here:
-int myFunction(int, int);
+  https://github.com/sui77/rc-switch/
+*/
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+#include <RCSwitch.h>
+
+RCSwitch mySwitch = RCSwitch();
+
+void setup()
+{
+  Serial.begin(115200);
+  mySwitch.enableReceive(5); // Receiver on interrupt 0 => that is pin #2
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
+void loop()
+{
+  if (mySwitch.available())
+  {
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    Serial.print("Received ");
+    Serial.print(mySwitch.getReceivedValue());
+    Serial.print(" / ");
+    Serial.print(mySwitch.getReceivedBitlength());
+    Serial.print("bit ");
+    Serial.print("Protocol: ");
+    Serial.println(mySwitch.getReceivedProtocol());
+
+    mySwitch.resetAvailable();
+  }
 }
