@@ -27,6 +27,12 @@ void loop()
     Serial.print("bit ");
     Serial.print("Protocol: ");
     Serial.println(mySwitch.getReceivedProtocol());
+    Serial.print("Raw data: ");
+    for (int i = 0; i < mySwitch.getReceivedBitlength(); i++)
+    {
+      Serial.print(mySwitch.getReceivedRawdata()[i]);
+    }
+    Serial.println();
 
     mySwitch.resetAvailable();
   }
