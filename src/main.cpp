@@ -1,39 +1,39 @@
-#include <Arduino.h>
 /*
-  Simple example for receiving
-
+  Based on the SendDemo example from the RC Switch library
   https://github.com/sui77/rc-switch/
 */
 
 #include <RCSwitch.h>
-
 RCSwitch mySwitch = RCSwitch();
 
 void setup()
 {
-  Serial.begin(115200);
-  mySwitch.enableReceive(5); // D1
+  Serial.begin(9600);
+
+  // Transmitter is connected to Arduino Pin #10
+  mySwitch.enableTransmit(5);
+
+  // Optional set pulse length.
+  mySwitch.setPulseLength(416);
+
+  // Optional set protocol (default is 1, will work for most outlets)
+  mySwitch.setProtocol(2);
+
+  // Optional set number of transmission repetitions.
+  mySwitch.setRepeatTransmit(15);
 }
 
 void loop()
 {
-  if (mySwitch.available())
-  {
+  // Binary code - button 3
+  mySwitch.send("000101010101000101010101");
+  delay(1000);
+  mySwitch.send("000101010101000101010100");
+  delay(1000);
 
-    Serial.print("Received ");
-    Serial.print(mySwitch.getReceivedValue());
-    Serial.print(" / ");
-    Serial.print(mySwitch.getReceivedBitlength());
-    Serial.print("bit ");
-    Serial.print("Protocol: ");
-    Serial.println(mySwitch.getReceivedProtocol());
-    Serial.print("Raw data: ");
-    for (int i = 0; i < mySwitch.getReceivedBitlength(); i++)
-    {
-      Serial.print(mySwitch.getReceivedRawdata()[i]);
-    }
-    Serial.println();
-
-    mySwitch.resetAvailable();
-  }
+  // Binary code - button 4
+  mySwitch.send("000101010101010001010101");
+  delay(1000);
+  mySwitch.send("000101010101010001010100");
+  delay(1000);
 }
