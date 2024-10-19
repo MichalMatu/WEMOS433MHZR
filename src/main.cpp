@@ -12,7 +12,7 @@ RCSwitch mySwitch = RCSwitch();
 void setup()
 {
   Serial.begin(115200);
-  mySwitch.enableReceive(5); // D1
+  mySwitch.enableReceive(5); 
 }
 
 void loop()
