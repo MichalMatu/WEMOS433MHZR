@@ -12,6 +12,11 @@ const int receiverPin = 5;     // Pin for the receiver
 unsigned long previousMillis = 0; // Store the last time the signal was sent
 const long interval = 5000;       // Interval to send signal (in milliseconds)
 
+// Define signals to send
+const long signal1 = 906118656;  // First signal
+const long signal2 = 1040336384; // Second signal
+bool sendingSignal1 = true;      // Flag to determine which signal to send
+
 void setup()
 {
   Serial.begin(115200);
@@ -19,6 +24,9 @@ void setup()
   // Initialize transmitter and receiver
   transmitterSwitch.enableTransmit(transmitterPin);
   receiverSwitch.enableReceive(receiverPin);
+
+  // Set the protocol to 2 for the transmitter
+  transmitterSwitch.setProtocol(2);
 
   Serial.println("Transmitter and receiver initialized.");
 }
@@ -46,13 +54,25 @@ void loop()
     receiverSwitch.resetAvailable(); // Reset the availability
   }
 
-  // Sending a signal every 5 seconds using millis()
+  // Sending signals using millis()
   unsigned long currentMillis = millis(); // Get the current time
 
   if (currentMillis - previousMillis >= interval) // Check if the interval has passed
   {
-    previousMillis = currentMillis;    // Save the last time you sent the signal
-    transmitterSwitch.send(12345, 24); // Send a value (e.g., 12345) with a bit length (e.g., 24 bits)
-    Serial.println("Signal sent!");
+    previousMillis = currentMillis; // Save the last time you sent the signal
+
+    if (sendingSignal1)
+    {
+      transmitterSwitch.send(signal1, 32); // Send the first signal
+      Serial.println("Signal sent: " + String(signal1));
+    }
+    else
+    {
+      transmitterSwitch.send(signal2, 32); // Send the second signal
+      Serial.println("Signal sent: " + String(signal2));
+    }
+
+    // Toggle between signals
+    sendingSignal1 = !sendingSignal1;
   }
 }
